@@ -6,7 +6,6 @@ abstract class Droid {
     protected int maxHealth;
     protected int damage;
     protected int energyShield;
-    protected boolean isAlive = true;
 
     public Droid(String name, int health, int damage, int energyShield) {
         this.name = name;
@@ -16,12 +15,12 @@ abstract class Droid {
         this.energyShield = energyShield;
     }
 
-    public void takeDamage(int damage) {
-        if(!isAlive) return;
+    public void takeDamage(int damage, Droid attacker) {
+        if(!isAlive()) return;
 
-        if(this.energyShield >= 0){
+        if(this.energyShield > 0){
             this.energyShield -= damage;
-            System.out.printf("The droid: %s energy shield damaged..\n ", name);
+            System.out.printf("The droid: %s energy shield damaged on %d\n ", name, damage);
             if(this.energyShield <= 0){
                 this.energyShield = 0;
                 System.out.printf("The droid: %s energy shield was destroyed..\n ", name);
@@ -29,33 +28,50 @@ abstract class Droid {
         }
         else {
             this.currentHealth -= damage;
-            if (currentHealth <= 0) deathDroid();
             System.out.printf("The droid: %s received %d damage points.\n ", name, damage);
+            if (!isAlive()) deathDroid();
         }
     }
 
-    public void attackEnemy(Droid otherDroid) {
-        if(!isAlive) return;
+    public void takeDamageShieldHealth(int damage, Droid attacker) {
+        if(!isAlive()) return;
+        int shieldDamage = damage / 2;
+        int healthDamage = damage - shieldDamage;
 
-        System.out.printf("The droid: %s hit the droid: %s.\n", this.name, otherDroid.name);
-        otherDroid.takeDamage(this.damage);
+        this.energyShield -= shieldDamage;
+        System.out.printf("The droid: %s energy shield damaged on %d\n ", name, shieldDamage);
+        if(this.energyShield <= 0){
+            this.energyShield = 0;
+            System.out.printf("The droid: %s energy shield was destroyed..\n ", name);
+        }
+
+        this.currentHealth -= healthDamage;
+        System.out.printf("The droid: %s received %d damage points.\n ", name, damage);
+        if (!isAlive()) deathDroid();
+    }
+
+    public void attackEnemy(Droid enemy) {
+        if(!isAlive()) return;
+        if(!enemy.isAlive()) return;
+        enemy.takeDamage(this.damage,this );
+        System.out.printf("The droid: %s hit the droid: %s.\n", this.name, enemy.name);
     }
 
     public void takeHeal(int health) {
-        if(!isAlive) return;
-        if (maxHealth - this.currentHealth <= health )
-        {this.currentHealth += health;}
+        if(!isAlive()) return;
+        if (maxHealth - this.currentHealth <= health ) this.currentHealth += health;
         System.out.printf("The droid: %s was healed by %d HP points.\n",this.name, health);
     }
 
     public void deathDroid() {
-        isAlive = false;
         this.currentHealth = 0;
         System.out.printf("Droid: %s was death.\n", this.name);
     }
 
     public String statusDroid(){
-        return String.format("Droid: %s - %s HP:%d/%d DMG:%d\n", this.name, (this.isAlive ? "Alive" : "Dead"),this.currentHealth, this.maxHealth, this.damage);
+        return String.format("Droid: %s - %s HP:%d/%d DMG:%d\n", this.name, (isAlive() ? "Alive" : "Dead"),this.currentHealth, this.maxHealth, this.damage);
     }
+
+    public boolean isAlive() {return currentHealth > 0;}
 }
 
