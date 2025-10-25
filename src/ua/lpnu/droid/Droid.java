@@ -1,6 +1,6 @@
-package ua.lpnu.Droid;
+package ua.lpnu.droid;
 
-abstract class Droid {
+public abstract class Droid {
     protected String name;
     protected int currentHealth;
     protected int maxHealth;
@@ -69,7 +69,7 @@ abstract class Droid {
     }
 
     public String statusDroid(){
-        return String.format("Droid: %s - %s HP:%d/%d DMG:%d\n", this.name, (isAlive() ? "Alive" : "Dead"),this.currentHealth, this.maxHealth, this.damage);
+        return String.format("Droid: %s - %s HP:%d/%d DMG:%d ES:%d\n", this.name, (isAlive() ? "Alive" : "Dead"),this.currentHealth, this.maxHealth, this.damage, this.energyShield);
     }
 
     public boolean isAlive() {return currentHealth > 0;}

@@ -1,4 +1,4 @@
-package ua.lpnu.Droid;
+package ua.lpnu.droid;
 
 public class swordsmanDroid extends Droid{
     private boolean isCounterAttackReady = false;
@@ -31,6 +31,6 @@ public class swordsmanDroid extends Droid{
             }
             isCounterAttackReady = false;
             lastAttacker = null;
-        } else{super.attackEnemy(enemy);}
+        } else super.attackEnemy(enemy);
     }
 }

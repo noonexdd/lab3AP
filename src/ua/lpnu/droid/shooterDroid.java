@@ -1,9 +1,7 @@
-package ua.lpnu.Droid;
+package ua.lpnu.droid;
 
 public class shooterDroid extends Droid{
-    public shooterDroid(String name){
-        super(name, 60, 30, 100);
-    }
+    public shooterDroid(String name){super(name, 60, 30, 100);}
 
     public void penetratingShot(Droid target){
         System.out.printf("Droid: %s shoots with a penetrating shot\n", this.name);

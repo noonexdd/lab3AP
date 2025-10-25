@@ -1,4 +1,4 @@
-package ua.lpnu.Droid;
+package ua.lpnu.droid;
 
 public class armoredDroid extends Droid{
     double absorptionDamage;
