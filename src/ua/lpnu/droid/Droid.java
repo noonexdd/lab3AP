@@ -1,6 +1,9 @@
 package ua.lpnu.droid;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
-public abstract class Droid {
+public abstract class Droid implements Cloneable {
     protected String name;
     protected int currentHealth;
     protected int maxHealth;
@@ -59,8 +62,14 @@ public abstract class Droid {
 
     public void takeHeal(int health) {
         if(!isAlive()) return;
-        if (maxHealth - this.currentHealth <= health ) this.currentHealth += health;
-        System.out.printf("The droid: %s was healed by %d HP points.\n",this.name, health);
+        int beforeHeal = this.currentHealth;
+
+        this.currentHealth += health;
+        if(this.currentHealth > maxHealth) this.currentHealth = this.maxHealth;
+
+        int restoredHealth = this.currentHealth - beforeHeal;
+        if(restoredHealth > 0) System.out.printf("The droid: %s was healed by %d HP points.\n",this.name, restoredHealth);
+
     }
 
     public void deathDroid() {
@@ -69,9 +78,34 @@ public abstract class Droid {
     }
 
     public String statusDroid(){
-        return String.format("Droid: %s - %s HP:%d/%d DMG:%d ES:%d\n", this.name, (isAlive() ? "Alive" : "Dead"),this.currentHealth, this.maxHealth, this.damage, this.energyShield);
+        return String.format("Droid: %s - %s HP:%d/%d DMG:%d ES:%d\n", this.name, (isAlive() ? "Alive" : "Dead"),
+                this.currentHealth, this.maxHealth, this.damage, this.energyShield);
     }
 
     public boolean isAlive() {return currentHealth > 0;}
+
+    public void performAction(List<Droid> allies, List<Droid> enemies) {
+        Droid target = selectRandomDroid(enemies);
+        if(target != null) this.attackEnemy(target);
+    }
+
+    private Droid selectRandomDroid(List<Droid> team){
+        List<Droid> aliveDroids = team.stream().filter(Droid :: isAlive).collect(Collectors.toList());
+        if(aliveDroids.isEmpty()) return null;
+
+        return aliveDroids.get(new Random().nextInt(aliveDroids.size()));
+    }
+
+    public int getCurrentHealth() {return currentHealth;}
+    public int getMaxHealth() {return maxHealth;}
+
+    @Override
+    public Droid clone() {
+        try {
+            return (Droid) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }
 

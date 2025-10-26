@@ -16,7 +16,7 @@ public class shooterDroid extends Droid{
         if(!isAlive()) return;
         if(!enemy.isAlive()) return;
 
-        if(countShot == 3){penetratingShot(enemy);}
+        if(countShot == 2) penetratingShot(enemy);
         else{
             countShot++;
             super.attackEnemy(enemy);

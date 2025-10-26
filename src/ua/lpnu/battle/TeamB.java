@@ -1,21 +1,18 @@
 package ua.lpnu.battle;
-import ua.lpnu.droid.Droid;
+import ua.lpnu.droid.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.Random;
 
-public class TeamVSTeam {
+public class TeamB {
     private final List<Droid> team1;
     private final List<Droid> team2;
-    private Random random = new Random();
 
-    public TeamVSTeam(List<Droid> team1, List<Droid> team2) {
+    public TeamB(List<Droid> team1, List<Droid> team2) {
         this.team1 = team1;
         this.team2 = team2;
     }
 
-    public void startFightTVST(){
+    public void startFightTeam(){
         while(isTeamAlive(team1) && isTeamAlive(team2)){
             List<Droid> allDroids = new ArrayList<>();
             allDroids.addAll(team1);
@@ -23,10 +20,10 @@ public class TeamVSTeam {
 
             for(Droid curentDroid : allDroids){
                 if(curentDroid.isAlive()){
-                    List<Droid> enemyTeam = team1.contains(curentDroid) ? team1 : team2;
-                    Droid target = selectRandomDroid(enemyTeam);
-                    if(target != null) curentDroid.attackEnemy(target);
+                    List<Droid> enemyTeam = team1.contains(curentDroid) ? team2 : team1;
+                    List<Droid> allyTeam = team1.contains(curentDroid) ? team1 : team2;
 
+                    curentDroid.performAction(allyTeam,enemyTeam);
                     if(!isTeamAlive(enemyTeam)) break;
                 }
             }
@@ -40,20 +37,12 @@ public class TeamVSTeam {
         return false;
     }
 
-    private Droid selectRandomDroid(List<Droid> enemyTeam){
-        List<Droid> aliveEnemy = enemyTeam.stream().filter(Droid :: isAlive).collect(Collectors.toList());
-        if(aliveEnemy.isEmpty()) return null;
-
-        int index = random.nextInt(aliveEnemy.size());
-        return aliveEnemy.get(index);
-    }
-
     private void printResults(){
         System.out.println("Round Results:");
         System.out.println("Team1:");
-        team1.forEach(System.out::println);
+        team1.forEach(d -> System.out.println(d.statusDroid()));
         System.out.println("Team2:");
-        team2.forEach(System.out::println);
+        team2.forEach(d -> System.out.println(d.statusDroid()));
     }
 
     private void determineWinners(){

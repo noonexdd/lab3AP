@@ -14,7 +14,7 @@ public class swordsmanDroid extends Droid{
             System.out.printf("Droid: %s parried the attack.\n", this.name);
             isCounterAttackReady = true;
             lastAttacker = attacker;
-        } else{super.takeDamage(damage,  attacker);}
+        } else super.takeDamage(damage,  attacker);
     }
 
     @Override
