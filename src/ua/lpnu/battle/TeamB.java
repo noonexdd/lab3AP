@@ -6,10 +6,12 @@ import java.util.List;
 public class TeamB {
     private final List<Droid> team1;
     private final List<Droid> team2;
+    private final BattleLogger logger;
 
-    public TeamB(List<Droid> team1, List<Droid> team2) {
+    public TeamB(List<Droid> team1, List<Droid> team2,  BattleLogger logger) {
         this.team1 = team1;
         this.team2 = team2;
+        this.logger = logger;
     }
 
     public void startFightTeam(){
@@ -23,7 +25,7 @@ public class TeamB {
                     List<Droid> enemyTeam = team1.contains(curentDroid) ? team2 : team1;
                     List<Droid> allyTeam = team1.contains(curentDroid) ? team1 : team2;
 
-                    curentDroid.performAction(allyTeam,enemyTeam);
+                    curentDroid.performAction(allyTeam, enemyTeam, logger);
                     if(!isTeamAlive(enemyTeam)) break;
                 }
             }
@@ -38,18 +40,17 @@ public class TeamB {
     }
 
     private void printResults(){
-        System.out.println("Round Results:");
-        System.out.println("Team1:");
-        team1.forEach(d -> System.out.println(d.statusDroid()));
-        System.out.println("Team2:");
-        team2.forEach(d -> System.out.println(d.statusDroid()));
+        logger.log("Round Results:");
+        logger.log("Team1:");
+        team1.forEach(d ->  logger.log(d.statusDroid()));
+        logger.log("Team2:");
+        team2.forEach(d ->  logger.log(d.statusDroid()));
     }
 
     private void determineWinners(){
-        System.out.println("The fight is over");
-        if(isTeamAlive(team1)) System.out.println("Winner is Team1");
-        else if(isTeamAlive(team2)) System.out.println("Winner is Team2");
-        else System.out.println("No winner is draw");
+        logger.log("The fight is over");
+        if(isTeamAlive(team1))  logger.log("Winner is Team1");
+        else if(isTeamAlive(team2))  logger.log("Winner is Team2");
+        else  logger.log("No winner is draw");
     }
-
 }
